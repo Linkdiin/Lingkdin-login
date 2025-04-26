@@ -1,160 +1,117 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>OTP Login</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #74ebd5, #acb6e5);
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Job Listing Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+        }
+        .logo {
+            width: 100px;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        .job-description {
+            margin: 20px 0;
+        }
+    .easy-apply-button {
+      display: inline-flex;
       align-items: center;
-    }
-    .container {
-      background: white;
-      padding: 30px 25px;
-      border-radius: 10px;
-      box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
-      width: 300px;
-      text-align: center;
-    }
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    input[type="email"],
-    input[type="password"],
-    input[type="text"] {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background-color: #4CAF50;
+      background-color: #0a66c2;
       color: white;
-      padding: 10px 15px;
-      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      width: 95%;
+      text-decoration: none;
     }
-    button:hover {
-      background-color: #45a049;
+    .easy-apply-button i {
+      margin-right: 10px;
+      font-size: 20px;
     }
-    #recaptcha-container {
-      margin-top: 10px;
+    .easy-apply-button:hover {
+      background-color: #004182;
     }
-    #successMsg h3 {
-      color: green;
-    }
-  </style>
+        .apply-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0073b1;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .apply-button:hover {
+            background-color: #005582;
+        }
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <div class="container">
-    <h2>Login Form</h2>
-
-    <div id="loginForm">
-      <input type="email" id="email" placeholder="Email" required><br>
-      <input type="password" id="password" placeholder="Password" required><br>
-      <input type="text" id="phone" placeholder="+8801XXXXXXXXX" required><br>
-      <div id="recaptcha-container"></div><br>
-      <button onclick="sendOTP()">Send OTP</button>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Company Logo" class="logo">
+            <h1>We are looking for a skilled Content Writer to join our team on a long-term basis.</h1>
+        </div>
+        <div class="job-description">
+            <p>We are looking for a creative and reliable Content Writer to join our team! Your role will be to create engaging, high-quality content for blogs, websites, and social media.</p>
+            <p><b>Responsibilities:</b></p>
+            <ul>
+                <li>Excellent command of English</li>
+                <li>Ability to write engaging, SEO-friendly content.</li>
+                <li>Experience in writing blog posts, product descriptions, and social media content.</li>
+                <li>Must be able to follow guidelines and meet deadlines.</li>
+                <li>Write clear, original, and well-researched content</li>
+               
+            </ul>
+            
+            <p><b>Requirements:</b></p>
+            <ul>
+                <li>Strong writing and editing skills</li>
+                <li>Ability to research and write on different topics</li>
+                <li>A professional Linkedin portfolio.</li>
+                <li>Good time management and communication skills.</li>
+               
+            </ul>
+            <p><i><b>Employment Type:</b> Part-time / Freelance.</i></p>
+            <p><i><b>Location:</b> Remote.</i> </p>
+            <p><i><b>Salary: </b>Negotiable.</i></p>
+            <p>Join us to help shape the future of professional networking!</p>
+        </div>
+        <a href="#" class="easy-apply-button">
+          <i class="fab fa-linkedin"></i> Easy Apply
+        </a>
     </div>
-
-    <div id="otpForm" style="display:none;">
-      <input type="text" id="otp" placeholder="Enter OTP"><br>
-      <button onclick="verifyOTP()">Verify OTP</button>
-      <button onclick="retry()">Try Again</button>
-    </div>
-
-    <div id="successMsg" style="display:none;">
-      <h3>Login Success!</h3>
-    </div>
-  </div>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT",
-      appId: "YOUR_APP_ID"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-      'size': 'normal'
-    });
-
-    let confirmationResult;
-
-    function sendOTP() {
-      const phone = document.getElementById('phone').value;
-      const appVerifier = window.recaptchaVerifier;
-
-      auth.signInWithPhoneNumber(phone, appVerifier)
-        .then((result) => {
-          confirmationResult = result;
-          document.getElementById('loginForm').style.display = 'none';
-          document.getElementById('otpForm').style.display = 'block';
-        })
-        .catch((error) => {
-          alert("Error sending OTP: " + error.message);
-        });
-    }
-
-    function verifyOTP() {
-      const code = document.getElementById('otp').value;
-      confirmationResult.confirm(code)
-        .then(() => {
-          document.getElementById('otpForm').style.display = 'none';
-          document.getElementById('successMsg').style.display = 'block';
-        })
-        .catch(() => {
-          alert("Invalid OTP. Try again.");
-        });
-    }
-
-    function retry() {
-      document.getElementById('otpForm').style.display = 'none';
-      document.getElementById('loginForm').style.display = 'block';
-    }
-  </script>
-
 </body>
 </html>
-
-
----
-
-Features:
-
-Smooth background color gradient.
-
-Centered login card with shadow and rounded corners.
-
-Styled input fields and buttons.
-
-Mobile responsive (looks good even on small screen).
-
-
-
----
-
-Next:
-Would you like me to give you the ready index.html file to directly upload to GitHub?
-(It’ll save you time.)
-
-Say: "Yes ready file" if you want!
-
