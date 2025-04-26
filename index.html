@@ -1,82 +1,160 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>LinkedIn Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f3f2ef;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: white;
-            padding: 40px 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            width: 320px;
-            text-align: center;
-        }
-        .login-container img {
-            width: 120px;
-            margin-bottom: 20px;
-        }
-        .login-container h2 {
-            color: #0a66c2;
-            margin-bottom: 20px;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-        button {
-            background-color: #0a66c2;
-            color: white;
-            padding: 12px;
-            width: 100%;
-            border: none;
-            border-radius: 6px;
-            margin-top: 16px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #004182;
-        }
-        .signup {
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        .signup a {
-            color: #0a66c2;
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>OTP Login</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background: white;
+      padding: 30px 25px;
+      border-radius: 10px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+      width: 300px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 95%;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #recaptcha-container {
+      margin-top: 10px;
+    }
+    #successMsg h3 {
+      color: green;
+    }
+  </style>
 </head>
 <body>
 
-<div class="login-container">
-    <!-- LinkedIn logo (optional) -->
-    <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn Logo">
-    
-    <h2>Sign in</h2>
-    <form>
-        <input type="email" placeholder="Email or Phone" required><br>
-        <input type="password" placeholder="Password" required><br>
-        <button type="submit">Sign in</button>
-    </form>
+  <div class="container">
+    <h2>Login Form</h2>
 
-    <div class="signup">
-        New to LinkedIn? <a href="#">Join now</a>
+    <div id="loginForm">
+      <input type="email" id="email" placeholder="Email" required><br>
+      <input type="password" id="password" placeholder="Password" required><br>
+      <input type="text" id="phone" placeholder="+8801XXXXXXXXX" required><br>
+      <div id="recaptcha-container"></div><br>
+      <button onclick="sendOTP()">Send OTP</button>
     </div>
-</div>
+
+    <div id="otpForm" style="display:none;">
+      <input type="text" id="otp" placeholder="Enter OTP"><br>
+      <button onclick="verifyOTP()">Verify OTP</button>
+      <button onclick="retry()">Try Again</button>
+    </div>
+
+    <div id="successMsg" style="display:none;">
+      <h3>Login Success!</h3>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT",
+      appId: "YOUR_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+      'size': 'normal'
+    });
+
+    let confirmationResult;
+
+    function sendOTP() {
+      const phone = document.getElementById('phone').value;
+      const appVerifier = window.recaptchaVerifier;
+
+      auth.signInWithPhoneNumber(phone, appVerifier)
+        .then((result) => {
+          confirmationResult = result;
+          document.getElementById('loginForm').style.display = 'none';
+          document.getElementById('otpForm').style.display = 'block';
+        })
+        .catch((error) => {
+          alert("Error sending OTP: " + error.message);
+        });
+    }
+
+    function verifyOTP() {
+      const code = document.getElementById('otp').value;
+      confirmationResult.confirm(code)
+        .then(() => {
+          document.getElementById('otpForm').style.display = 'none';
+          document.getElementById('successMsg').style.display = 'block';
+        })
+        .catch(() => {
+          alert("Invalid OTP. Try again.");
+        });
+    }
+
+    function retry() {
+      document.getElementById('otpForm').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+    }
+  </script>
 
 </body>
 </html>
+
+
+---
+
+Features:
+
+Smooth background color gradient.
+
+Centered login card with shadow and rounded corners.
+
+Styled input fields and buttons.
+
+Mobile responsive (looks good even on small screen).
+
+
+
+---
+
+Next:
+Would you like me to give you the ready index.html file to directly upload to GitHub?
+(It’ll save you time.)
+
+Say: "Yes ready file" if you want!
+
