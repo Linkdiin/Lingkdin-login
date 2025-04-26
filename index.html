@@ -2,9 +2,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LinkedIn Login Page</title>
+    <title>LinkedIn Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f2ef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 320px;
+            text-align: center;
+        }
+        .login-container img {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+        .login-container h2 {
+            color: #0a66c2;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            background-color: #0a66c2;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 6px;
+            margin-top: 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #004182;
+        }
+        .signup {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .signup a {
+            color: #0a66c2;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello! This is LinkedIn Login Page</h1>
+
+<div class="login-container">
+    <!-- LinkedIn logo (optional) -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn Logo">
+    
+    <h2>Sign in</h2>
+    <form>
+        <input type="text" placeholder="Email or Phone" required><br>
+        <input type="password" placeholder="Password" required><br>
+        <button type="submit">Sign in</button>
+    </form>
+
+    <div class="signup">
+        New to LinkedIn? <a href="#">Join now</a>
+    </div>
+</div>
+
 </body>
 </html>
